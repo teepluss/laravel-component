@@ -53,9 +53,29 @@ class ComponentMake extends Command {
         $componentName = $this->argument('component');
         $componentName = ucfirst($componentName);
 
-        $componentPath = app_path('Components/'.$componentName);
+        $componentPath = app_path('Components/');
 
-        if ($this->app['files']->isDirectory($componentPath))
+        $this->createComponentStuff($componentPath);
+        $this->createComponent($componentPath.'/'.$componentName);
+
+        return $this->info("Component $componentName created.");
+    }
+
+    protected function createComponentStuff($path)
+    {
+        if ( ! $this->app['files']->isDirectory($path))
+        {
+            $this->app['files']->makeDirectory($path, 0777, true);
+        }
+
+        $templatePath = realpath(__DIR__.'/../templates');
+
+        $this->app['files']->copy($templatePath.'/gulpfile.js', $path.'/gulpfile.js');
+    }
+
+    protected function createComponent($path)
+    {
+        if ($this->app['files']->isDirectory($path))
         {
             if ( ! $this->confirm('Component is already exists, Do you want to replace? [y|n]'))
             {
@@ -63,13 +83,6 @@ class ComponentMake extends Command {
             }
         }
 
-        $this->createComponentStuff($componentPath);
-
-        return $this->info("Component $componentName created.");
-    }
-
-    protected function createComponentStuff($path)
-    {
         $examplePath = realpath(__DIR__.'/../templates/component');
 
         // Delete component dir.

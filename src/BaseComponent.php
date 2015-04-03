@@ -2,6 +2,10 @@
 
 class BaseComponent {
 
+    protected $namespace;
+
+    protected $componentName;
+
     protected $arguments;
 
     protected $view;
@@ -11,9 +15,29 @@ class BaseComponent {
         $this->arguments = $arguments;
     }
 
-    public function getNamespace()
+    public function getCacheKey()
+    {
+        return md5($this->namespace.json_encode($this->arguments));
+    }
+
+    public function getComponentNamespace()
     {
         return $this->namespace;
+    }
+
+    public function getComponentName()
+    {
+        return ucfirst($this->namespace);
+    }
+
+    public function getComponentPath()
+    {
+        return app_path('Components/'.$this->getComponentName());
+    }
+
+    public function getComponentPublicPath()
+    {
+        return asset('teepluss/components/'.$this->getComponentName());
     }
 
     protected function argument($name)
