@@ -4,7 +4,10 @@ Component is used to separate small parts from the main view and still works per
 
 ## Installation
 
-### Add custom repository on composer.json
+### Composer
+
+Add custom repository on composer.json
+
 ~~~json
 ...
 "repositories": [
@@ -12,7 +15,6 @@ Component is used to separate small parts from the main view and still works per
     "type": "vcs",
     "url": "https://github.com/teepluss/laravel-component"
 },
-...
 ~~~
 
 Run `composer require` to install the package.
