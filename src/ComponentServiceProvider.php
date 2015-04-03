@@ -32,7 +32,7 @@ class ComponentServiceProvider extends ServiceProvider {
 	{
 		$this->app->singleton('component', function($app)
 		{
-			return new Component();
+			return new Component($app);
 		});
 
 		$this->app->singleton('component.make', function($app)

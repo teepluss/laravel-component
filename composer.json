@@ -14,7 +14,10 @@
     "autoload": {
         "psr-4": {
             "Teepluss\\Component\\": "src/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "minimum-stability": "stable"
 }

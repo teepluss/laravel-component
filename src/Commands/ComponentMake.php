@@ -57,10 +57,56 @@ class ComponentMake extends Command {
 
         if ($this->app['files']->isDirectory($componentPath))
         {
-            return $this->error("Component {$componentName} is already exists.");
+            if ( ! $this->confirm('Component is already exists, Do you want to replace? [y|n]'))
+            {
+                return false;
+            }
         }
 
-        $this->app['files']->makeDirectory($componentPath, 0777, true);
+        $this->createComponentStuff($componentPath);
+    }
+
+    protected function createComponentStuff($path)
+    {
+        $examplePath = realpath(__DIR__.'/../templates/component');
+
+        // Delete component dir.
+        $this->app['files']->deleteDirectory($path);
+
+        // Create a component dir, if not exists.
+        $this->app['files']->makeDirectory($path, 0777, true);
+
+        // Copy stiff to component dir.
+        $this->app['files']->copyDirectory($examplePath, $path);
+
+        // Rename and Fix content in main class.
+
+        $segments = explode('/', $path);
+        $name = array_pop($segments);
+
+        // Rename core file.
+        $componentName  = $name;
+        $ComponentNamespace = lcfirst($componentName);
+
+        $componentClass = $path.'/'.$componentName.'.php';
+
+        $this->app['files']->move($path.'/ExampleComponent.php', $componentClass);
+
+        $tmp = $this->app['files']->get($componentClass);
+
+        $replacements = [
+            'AppNamespace'       => $this->getAppNamespace(),
+            'ComponentName'      => $componentName,
+            'ComponentNamespace' => $ComponentNamespace,
+        ];
+
+        $content = preg_replace_callback('/\{([a-z0-9]+)\}/i', function($matches) use ($replacements)
+        {
+            return $replacements[$matches[1]];
+
+        }, $tmp);
+
+        $this->app['files']->put($componentClass, $content);
     }
 
     /**
