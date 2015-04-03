@@ -6,8 +6,10 @@ if ( ! function_exists('component'))
     {
         $component = app('component');
 
-        $core = "\App\Component\{$name}($arguments)";
+        $component->getComponent($name);
 
-        return $component->uses(new $core);
+        $instance = $component->getComponent($name, $arguments);
+
+        return $component->uses($instance);
     }
 }

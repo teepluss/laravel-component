@@ -16,6 +16,11 @@ class BaseComponent {
         return $this->namespace;
     }
 
+    protected function argument($name)
+    {
+        return array_get($this->arguments, $name);
+    }
+
     public function view($path, $data)
     {
         $this->view = [

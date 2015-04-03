@@ -14,7 +14,7 @@ class {ComponentName} extends BaseComponent implements BaseComponentInterface {
         $this->arguments = $arguments;
     }
 
-    public function prepare()
+    final public function prepare()
     {
         $this->view('index', $this->arguments);
 

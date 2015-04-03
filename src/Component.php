@@ -1,8 +1,10 @@
 <?php namespace Teepluss\Component;
 
-use Illuminate\Container\Container as Application;
+use Illuminate\Console\AppNamespaceDetectorTrait;
 
 class Component {
+
+    use AppNamespaceDetectorTrait;
 
     protected $app;
 
@@ -30,6 +32,13 @@ class Component {
     protected function getComponentPath()
     {
         return app_path('Components/'.ucfirst($this->component->getNamespace()));
+    }
+
+    public function getComponent($name, $arguments)
+    {
+        $component = "\\{$this->getAppNameSpace()}Components\\$name\\$name";
+
+        return new $component($arguments);
     }
 
     public function render()

@@ -64,6 +64,8 @@ class ComponentMake extends Command {
         }
 
         $this->createComponentStuff($componentPath);
+
+        return $this->info("Component $componentName created.");
     }
 
     protected function createComponentStuff($path)
