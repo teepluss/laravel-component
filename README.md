@@ -39,3 +39,26 @@ Publish Configuration
 ~~~shell
 php artisan vendor:publish --provider="Teepluss\Component\ComponentServiceProvider"
 ~~~
+
+## Usage
+
+### Create a Component
+
+Using artisan CLI to create a component, then you can found your component into `app/Components`.
+
+~~~shell
+php artisan component:make LiveChatBox
+~~~
+
+### Render a component.
+
+~~~php
+Component::uses(new App\Components\LiveChatBox\LiveChatBox(['args' => '1']))->render();
+
+// or using helper.
+
+component('LiveChatBox', ['args' => '1'])->render();
+~~~
+
+### TODO: Working with assets.
+
