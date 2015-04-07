@@ -14,7 +14,7 @@ Add custom repository on composer.json
 {
     "type": "vcs",
     "url": "https://github.com/teepluss/laravel-component"
-},
+}],
 ~~~
 
 Run `composer require` to install the package.
