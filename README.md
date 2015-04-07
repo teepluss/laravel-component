@@ -59,7 +59,7 @@ root
 |------------ script.js
 |------- lang
 |--------- en
-|----------- messages.php
+|------------ messages.php
 |------- views
 |--------- index.blade.php
 |------- LiveChatbox.php
