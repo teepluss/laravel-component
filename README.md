@@ -77,7 +77,7 @@ Render all component scripts and styles from the main layout
 {!! component()->uses('LiveChatBox')->asset('img/someimage.png') !!}
 ~~~
 
-Localization
+Translation
 
 ~~~php
 {!! component()->trans('message') !!}
