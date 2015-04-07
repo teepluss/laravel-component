@@ -1,6 +1,10 @@
 {
     "name": "teepluss/component",
-    "description": "",
+    "description": "Component is used to separate small parts from the main view and still works perfectly.",
+    "keywords": ["laravel", "component", "layout", "asset", "widget"],
+    "homepage": "https://github.com/teepluss/laravel-theme",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Teepluss",
