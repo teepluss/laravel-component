@@ -2,11 +2,8 @@
 
 if ( ! function_exists('component'))
 {
-    function component($name, $arguments = [])
+    function component()
     {
         return app('component');
     }
 }
-
-
-//component()->img();
