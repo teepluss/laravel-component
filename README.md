@@ -44,6 +44,29 @@ Using artisan CLI to create a component, then you can found your component into 
 php artisan component:make LiveChatBox
 ~~~
 
+The command will generate a structure like this:
+
+~~~shell
+root
+|- app
+|--- Components
+|----- LiveChatbox
+|------- assets
+|--------- css
+|------------ style.css
+|--------- img
+|--------- js
+|------------ script.js
+|------- lang
+|--------- en
+|----------- messages.php
+|------- views
+|--------- index.blade.php
+|------- LiveChatbox.php
+|----- gulp.js
+
+~~~
+
 ### Render a component.
 
 ~~~html
