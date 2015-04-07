@@ -19,7 +19,11 @@ class {ComponentName} extends BaseComponent implements BaseComponentInterface {
 
     final public function prepare()
     {
-        $this->view('index', $this->arguments);
+        $arguments = array_merge($this->arguments, [
+            'component' => $this->getComponentName()
+        ]);
+
+        $this->view('index', $arguments);
 
         return $this;
     }

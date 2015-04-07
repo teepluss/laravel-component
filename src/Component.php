@@ -20,6 +20,13 @@ class Component {
     {
         $this->component = $this->getComponent($component, $arguments);
 
+        // Add translation hint.
+        $this->app['translator']->addNamespace(
+            $this->component->getComponentNamespace(),
+            $this->component->getComponentPath().'/lang'
+        );
+
+        // Ad view hint.
         $this->app['view']->addNamespace(
             $this->component->getComponentNamespace(),
             $this->component->getComponentPath().'/views'
@@ -53,6 +60,13 @@ class Component {
     public function src($path)
     {
         return $this->component->getComponentPath().'/'.ltrim($path, '/');
+    }
+
+    public function trans($key, $file = 'messages')
+    {
+        $line = $this->component->getComponentNamespace().'::'.$file.'.'.$key;
+
+        return $this->app['translator']->get($line);
     }
 
     public function render()

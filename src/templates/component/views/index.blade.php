@@ -1,1 +1,2 @@
-<h3>Component</h3>
+<h3>Component:: {{ $component }}</h3>
+<p>{!! component()->trans('message') !!}</p>

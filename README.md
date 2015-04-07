@@ -83,6 +83,12 @@ component()->styles();
 component()->uses('LiveChatBox')->asset('img/someimage.png');
 ~~~
 
+Localization
+
+~~~php
+component()->trans('message');
+~~~
+
 ## Support or Contact
 
 If you have some problem, Contact teepluss@gmail.com
