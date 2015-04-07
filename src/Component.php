@@ -1,6 +1,7 @@
 <?php namespace Teepluss\Component;
 
 use Illuminate\Console\AppNamespaceDetectorTrait;
+use Illuminate\Foundation\Application as Application;
 
 class Component {
 
