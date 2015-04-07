@@ -28,36 +28,21 @@ class Component {
         return $this;
     }
 
-    // protected function getComponentNamespace()
-    // {
-    //     return $this->component->getNamespace();
-    // }
-
-    // protected function getComponentPath()
-    // {
-    //     return app_path('Components/'.ucfirst($this->component->getNamespace()));
-    // }
-
-    // protected function getComponentPublicPath()
-    // {
-    //     return $this->app['url']->asset('teepluss/components/'.ucfirst($this->component->getNamespace()));
-    // }
-
     public function getComponent($name, $arguments)
     {
         $component = "\\{$this->getAppNamespace()}Components\\$name\\$name";
 
-        return new $component($arguments);
+        return new $component($this->app, $arguments);
     }
 
     public function scripts()
     {
-        // return component scripts.
+        return $this->app['view']->yieldContent('component-scripts');
     }
 
     public function styles()
     {
-        // return component styles.
+        return $this->app['view']->yieldContent('component-styles');
     }
 
     public function asset($path)

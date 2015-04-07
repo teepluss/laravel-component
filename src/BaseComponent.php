@@ -1,6 +1,10 @@
 <?php namespace Teepluss\Component;
 
+use Illuminate\Foundation\Application as Application;
+
 class BaseComponent {
+
+    protected $app;
 
     protected $namespace;
 
@@ -10,8 +14,14 @@ class BaseComponent {
 
     protected $view;
 
-    public function __construct($arguments = null)
+    protected $scripts;
+
+    protected $styles;
+
+    public function __construct(Application $app, $arguments = array())
     {
+        $this->app = $app;
+
         $this->arguments = $arguments;
     }
 
@@ -51,6 +61,16 @@ class BaseComponent {
             'path' => $path,
             'data' => $data
         ];
+    }
+
+    public function addScript($source)
+    {
+        //
+    }
+
+    public function addStyle($source)
+    {
+        //
     }
 
     public function execute()

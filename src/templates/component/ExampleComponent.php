@@ -2,16 +2,19 @@
 
 use Teepluss\Component\BaseComponent;
 use Teepluss\Component\BaseComponentInterface;
+use Illuminate\Foundation\Application as Application;
 
 class {ComponentName} extends BaseComponent implements BaseComponentInterface {
+
+    protected $app;
 
     protected $namespace = '{ComponentNamespace}';
 
     protected $arguments;
 
-    public function __construct($arguments = null)
+    public function __construct(Application $app, $arguments = array())
     {
-        $this->arguments = $arguments;
+        parent::__construct($app, $arguments);
     }
 
     final public function prepare()
