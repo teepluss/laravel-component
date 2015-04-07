@@ -1,5 +1,7 @@
 <?php
 
 return [
+
     'message' => 'translator'
+
 ];

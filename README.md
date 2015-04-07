@@ -11,10 +11,11 @@ Add custom repository on composer.json
 ~~~json
 ...
 "repositories": [
-{
-    "type": "vcs",
-    "url": "https://github.com/teepluss/laravel-component"
-},
+    {
+        "type": "vcs",
+        "url": "https://github.com/teepluss/laravel-component"
+    }
+]
 ~~~
 
 Run `composer require` to install the package.
@@ -52,8 +53,8 @@ php artisan component:make LiveChatBox
 
 ### Render a component.
 
-~~~php
-component()->uses('LiveChatBox', ['args' => '1'])->render();
+~~~html
+{!! component()->uses('LiveChatBox', ['args' => '1'])->render() !!}
 ~~~
 
 ### Working with assets.
@@ -74,19 +75,19 @@ $ gulp watch
 
 Render all component scripts and styles from the main layout
 
-~~~php
+~~~html
 // Display component scripts and styles.
-component()->scripts();
-component()->styles();
+{!! component()->scripts() !!}
+{!! component()->styles() !!}
 
 // Locate to asset path.
-component()->uses('LiveChatBox')->asset('img/someimage.png');
+{!! component()->uses('LiveChatBox')->asset('img/someimage.png') !!}
 ~~~
 
 Localization
 
 ~~~php
-component()->trans('message');
+{!! component()->trans('message') !!}
 ~~~
 
 ## Support or Contact

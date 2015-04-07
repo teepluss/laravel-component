@@ -61,6 +61,12 @@ class ComponentMake extends Command {
         return $this->info("Component $componentName created.");
     }
 
+    /**
+     * Create component root dir.
+     *
+     * @param  string $path
+     * @return void
+     */
     protected function createComponentStuff($path)
     {
         if ( ! $this->app['files']->isDirectory($path))
@@ -73,6 +79,12 @@ class ComponentMake extends Command {
         $this->app['files']->copy($templatePath.'/gulpfile.js', $path.'/gulpfile.js');
     }
 
+    /**
+     * Create component content.
+     *
+     * @param  string $path
+     * @return void
+     */
     protected function createComponent($path)
     {
         if ($this->app['files']->isDirectory($path))
@@ -144,7 +156,7 @@ class ComponentMake extends Command {
     protected function getOptions()
     {
         return [
-            ['example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null],
+            //['example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null],
         ];
     }
 
