@@ -3,8 +3,9 @@
 use Teepluss\Component\BaseComponentInterface;
 use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Foundation\Application as Application;
+use Teepluss\Component\Contracts\Component as ComponentContract;
 
-class Component {
+class Component implements ComponentContract {
 
     use AppNamespaceDetectorTrait;
 
@@ -162,6 +163,16 @@ class Component {
 
             return view($this->component->getComponentNamespace().'::'.$view['path'], $view['data'])->render();
         });
+    }
+
+    /**
+     * Render component to HTML.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->render();
     }
 
 }

@@ -44,6 +44,8 @@ class ComponentServiceProvider extends ServiceProvider {
         $this->commands(
             'component.make'
         );
+
+        $this->app->alias('component', 'Teepluss\Component\Contracts\Component');
 	}
 
 	/**

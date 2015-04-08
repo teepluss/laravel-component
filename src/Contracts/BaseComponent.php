@@ -1,6 +1,6 @@
-<?php namespace Teepluss\Component;
+<?php namespace Teepluss\Component\Contracts;
 
-interface BaseComponentInterface {
+interface BaseComponent {
 
     /**
      * Prepare your code here!

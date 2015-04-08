@@ -1,10 +1,10 @@
 <?php namespace {AppNamespace}Components\{ComponentName};
 
 use Teepluss\Component\BaseComponent;
-use Teepluss\Component\BaseComponentInterface;
 use Illuminate\Foundation\Application as Application;
+use Teepluss\Component\Contracts\BaseComponent as BaseComponentContract;
 
-class {ComponentName} extends BaseComponent implements BaseComponentInterface {
+class {ComponentName} extends BaseComponent implements BaseComponentContract {
 
     /**
      * Application.
