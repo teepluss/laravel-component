@@ -143,7 +143,7 @@ class BaseComponent {
         {
             if ($external == false)
             {
-                $source = $this->getComponentPublicPath($source);
+                $source = $this->getComponentPublicPath('assets/js/'.$source);
             }
 
             $source = '<script src="'.asset($source).'"></script>' . "\n";
@@ -166,7 +166,7 @@ class BaseComponent {
         {
             if ($external == false)
             {
-                $source = $this->getComponentPublicPath($source);
+                $source = $this->getComponentPublicPath('assets/css/'.$source);
             }
 
             $source = '<link href="'.asset($source).'" rel="stylesheet" media="'.$media.'">' . "\n";

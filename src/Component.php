@@ -28,7 +28,7 @@ class Component implements ComponentContract {
      *
      * @var boolean
      */
-    protected $coreLoaded = false;
+    protected $coreLoaded = array();
 
     /**
      * Core component insrance.
@@ -51,7 +51,7 @@ class Component implements ComponentContract {
     {
         $this->component = $this->getComponent($component, $arguments);
 
-        if ($this->coreLoaded == false)
+        if ( ! array_key_exists($component, $this->coreLoaded))
         {
             // Add translation hint.
             $this->app['translator']->addNamespace(
@@ -65,7 +65,7 @@ class Component implements ComponentContract {
                 $this->component->getComponentPath().'/views'
             );
 
-            $this->coreLoaded = true;
+            $this->coreLoaded[$component] = true;
         }
 
         return $this;
@@ -163,16 +163,6 @@ class Component implements ComponentContract {
 
             return view($this->component->getComponentNamespace().'::'.$view['path'], $view['data'])->render();
         });
-    }
-
-    /**
-     * Render component to HTML.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->render();
     }
 
 }

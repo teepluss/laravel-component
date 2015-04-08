@@ -56,9 +56,8 @@ class ComponentMake extends Command {
         $componentPath = app_path('Components/');
 
         $this->createComponentStuff($componentPath);
-        $this->createComponent($componentPath.'/'.$componentName);
 
-        return $this->info("Component $componentName created.");
+        return $this->createComponent($componentPath.'/'.$componentName);
     }
 
     /**
@@ -103,11 +102,10 @@ class ComponentMake extends Command {
         // Create a component dir, if not exists.
         $this->app['files']->makeDirectory($path, 0777, true);
 
-        // Copy stiff to component dir.
+        // Copy stuff to component dir.
         $this->app['files']->copyDirectory($examplePath, $path);
 
         // Rename and Fix content in main class.
-
         $segments = explode('/', $path);
         $name = array_pop($segments);
 
@@ -134,6 +132,8 @@ class ComponentMake extends Command {
         }, $tmp);
 
         $this->app['files']->put($componentClass, $content);
+
+        return $this->info("Component $componentName created.");
     }
 
     /**
