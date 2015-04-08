@@ -142,12 +142,16 @@ class Component implements ComponentContract {
     {
         $cacheKey = $this->component->getCacheKey();
 
-        // Using object cache to save performance.
-        return $this->app['cache']->driver('array')->remember($cacheKey, 9999, function()
-        {
-            $view = $this->component->prepare()->execute();
+        $view = $this->component->prepare()->execute();
 
-            return view($this->component->getComponentNamespace().'::'.$view['path'], $view['data'])->render();
+        if ( ! isset($view['path'])) return '';
+
+        // Using object cache to save performance.
+        return $this->app['cache']->driver('array')->remember($cacheKey, 9999, function() use ($view)
+        {
+            $data = array_get($view, 'data');
+
+            return view($this->component->getComponentNamespace().'::'.$view['path'], $data)->render();
         });
     }
 
