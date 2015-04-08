@@ -35,6 +35,11 @@ class ComponentServiceProvider extends ServiceProvider {
 			return new Component($app);
 		});
 
+		$this->app->singleton('component.asset', function($app)
+		{
+			return  new Asset();
+		});
+
 		$this->app->singleton('component.make', function($app)
 		{
 			return new Commands\ComponentMake($app);
@@ -55,7 +60,7 @@ class ComponentServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return ['component'];
+		return ['component', 'component.asset'];
 	}
 
 }

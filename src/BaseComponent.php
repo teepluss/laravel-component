@@ -133,64 +133,6 @@ class BaseComponent {
     }
 
     /**
-     * Prepare view path and data.
-     *
-     * @param  string $path
-     * @param  mixed  $data
-     * @return string
-     */
-    public function view($path, $data)
-    {
-        $this->view = [
-            'path' => $path,
-            'data' => $data
-        ];
-    }
-
-    /**
-     * Add asset.
-     *
-     * @param string $name
-     * @param string $source
-     * @param array  $dependencies
-     * @param array  $attributes
-     */
-    public function add($name, $source, $dependencies = array(), $attributes = array())
-    {
-        $this->added($name, $source, $dependencies, $attributes, false);
-    }
-
-    /**
-     * Add external asset.
-     *
-     * @param string $name
-     * @param string $source
-     * @param array  $dependencies
-     * @param array  $attributes
-     */
-    public function addExternal($name, $source, $dependencies = array(), $attributes = array())
-    {
-        $this->added($name, $source, $dependencies, $attributes, true);
-    }
-
-    /**
-     * Asset added.
-     *
-     * @param  string  $name
-     * @param  string  $source
-     * @param  array   $dependencies
-     * @param  array   $attributes
-     * @param  boolean $external
-     * @return void
-     */
-    protected function added($name, $source, $dependencies, $attributes, $external)
-    {
-        $type = (pathinfo($source, PATHINFO_EXTENSION) == 'css') ? 'style' : 'script';
-
-        $this->$type($name, $source, $dependencies, $attributes, $external);
-    }
-
-    /**
      * Add component script.
      *
      * @param  string  $name
@@ -200,22 +142,9 @@ class BaseComponent {
      * @param  boolean $external
      * @return void
      */
-    public function script($name, $source, $dependencies, $attributes, $external = false)
+    public function script($name, $source, $dependencies = array(), $attributes = array())
     {
-        // If lead with http or file extension, wrap the html tag to source.
-        if (preg_match('/^http|\.js/', $source))
-        {
-            if ($external == false)
-            {
-                $source = $this->getComponentPublicPath('assets/js/'.$source);
-            }
-
-            $attributes['src'] = asset($source);
-
-            $source = '<script'.$this->attributes($attributes).'></script>'.PHP_EOL;
-        }
-
-        $this->register('script', $name, $source, $dependencies);
+        $this->add('script', $name, $source, $dependencies, $attributes, false);
     }
 
     /**
@@ -228,23 +157,44 @@ class BaseComponent {
      * @param  boolean $external
      * @return void
      */
-    public function style($name, $source, $dependencies, $attributes, $external = false)
+    public function style($name, $source, $dependencies = array(), $attributes = array())
     {
-        // If lead with http or file extension, wrap the html tag to source.
-        if (preg_match('/^http|\.css/', $source))
+        $this->add('style', $name, $source, $dependencies, $attributes, false);
+    }
+
+    /**
+     * Add asset script and style.
+     *
+     * @param string  $type
+     * @param string  $name
+     * @param string  $source
+     * @param array   $dependencies
+     * @param array   $attributes
+     * @param boolean $external
+     */
+    protected function add($type, $name, $source, $dependencies = array(), $attributes = array(), $external = false)
+    {
+        $pattern = "~^//|http|\.js|\.css~i";
+
+        if (preg_match($pattern, $source))
         {
-            if ($external == false)
+            switch ($type)
             {
-                $source = $this->getComponentPublicPath('assets/css/'.$source);
+                case 'script' :
+                    $attributes['src'] = asset($source);
+                    $source = '<script'.$this->attributes($attributes).'></script>';
+                    break;
+                case 'style' :
+                    $attributes = array_merge(['rel' => 'stylesheet', 'media' => 'all'], $attributes);
+
+                    $attributes['href'] = asset($source);
+
+                    $source = '<link'.$this->attributes($attributes).'>';
+                    break;
             }
-
-            $attributes['href'] = asset($source);
-            $attributes['rel'] = 'stylesheet';
-
-            $source = '<link'.$this->attributes($attributes).'>'.PHP_EOL;
         }
 
-        $this->register('style', $name, $source, $dependencies);
+        $this->app['component.asset']->added($type, $name, $source, $dependencies, $attributes);
     }
 
     /**
@@ -285,17 +235,18 @@ class BaseComponent {
     }
 
     /**
-     * Register asset.
+     * Prepare view path and data.
      *
-     * @param  string $type
-     * @param  string $name
-     * @param  string $source
-     * @param  array  $dependencies
-     * @return void
+     * @param  string $path
+     * @param  mixed  $data
+     * @return string
      */
-    protected function register($type, $name, $source, $dependencies)
+    public function view($path, $data)
     {
-        $this->assets[$type][$name] = compact('source', 'dependencies');
+        $this->view = [
+            'path' => $path,
+            'data' => $data
+        ];
     }
 
     /**

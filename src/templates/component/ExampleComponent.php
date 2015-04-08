@@ -46,12 +46,12 @@ class {ComponentName} extends BaseComponent implements BaseComponentContract {
     final public function prepare()
     {
         // Example add internal assets.
-        // $this->add('name-1', script.js');
-        // $this->add('name-2', script-2.js', ['name-1']);
+        // $this->script('name-1', 'script.js');
+        // $this->script('name-2', 'script-2.js', ['name-1']);
 
         // Example add external assets.
-        // $this->addExternal('name-e1', '//code.jquery.com/jquery-2.1.3.min.js');
-        // $this->addExternal('name-e2', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', ['name-e1']);
+        // $this->script('name-e1', '//code.jquery.com/jquery-2.1.3.min.js');
+        // $this->style('name-e2', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', ['name-e1']);
 
         $arguments = array_merge($this->arguments, [
             'component' => $this->getComponentName()
