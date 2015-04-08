@@ -40,6 +40,13 @@ class BaseComponent {
     protected $view;
 
     /**
+     * All assets.
+     *
+     * @var array
+     */
+    protected $assets;
+
+    /**
      * Component new instance.
      *
      * @param \Illuminate\Foundation\Application $app
@@ -80,6 +87,16 @@ class BaseComponent {
     public function getComponentName()
     {
         return ucfirst($this->namespace);
+    }
+
+    /**
+     * Get component assets.
+     *
+     * @return array
+     */
+    public function getComponentAssets()
+    {
+        return $this->assets;
     }
 
     /**
@@ -131,12 +148,59 @@ class BaseComponent {
     }
 
     /**
+     * Add asset.
+     *
+     * @param string $name
+     * @param string $source
+     * @param array  $dependencies
+     * @param array  $attributes
+     */
+    public function add($name, $source, $dependencies = array(), $attributes = array())
+    {
+        $this->added($name, $source, $dependencies, $attributes, false);
+    }
+
+    /**
+     * Add external asset.
+     *
+     * @param string $name
+     * @param string $source
+     * @param array  $dependencies
+     * @param array  $attributes
+     */
+    public function addExternal($name, $source, $dependencies = array(), $attributes = array())
+    {
+        $this->added($name, $source, $dependencies, $attributes, true);
+    }
+
+    /**
+     * Asset added.
+     *
+     * @param  string  $name
+     * @param  string  $source
+     * @param  array   $dependencies
+     * @param  array   $attributes
+     * @param  boolean $external
+     * @return void
+     */
+    protected function added($name, $source, $dependencies, $attributes, $external)
+    {
+        $type = (pathinfo($source, PATHINFO_EXTENSION) == 'css') ? 'style' : 'script';
+
+        $this->$type($name, $source, $dependencies, $attributes, $external);
+    }
+
+    /**
      * Add component script.
      *
-     * @param string  $source
-     * @param boolean $external
+     * @param  string  $name
+     * @param  string  $source
+     * @param  array   $dependencies
+     * @param  array   $attributes
+     * @param  boolean $external
+     * @return void
      */
-    public function addScript($source, $external = false)
+    public function script($name, $source, $dependencies, $attributes, $external = false)
     {
         // If lead with http or file extension, wrap the html tag to source.
         if (preg_match('/^http|\.js/', $source))
@@ -146,20 +210,25 @@ class BaseComponent {
                 $source = $this->getComponentPublicPath('assets/js/'.$source);
             }
 
-            $source = '<script src="'.asset($source).'"></script>' . "\n";
+            $attributes['src'] = asset($source);
+
+            $source = '<script'.$this->attributes($attributes).'></script>'.PHP_EOL;
         }
 
-        $this->app['view']->inject('component-scripts', '@parent'.$source);
+        $this->register('script', $name, $source, $dependencies);
     }
 
     /**
      * Add component style.
      *
-     * @param string  $source
-     * @param boolean $external
-     * @param string  $media
+     * @param  string  $name
+     * @param  string  $source
+     * @param  array   $dependencies
+     * @param  array   $attributes
+     * @param  boolean $external
+     * @return void
      */
-    public function addStyle($source, $external = false, $media = 'screen')
+    public function style($name, $source, $dependencies, $attributes, $external = false)
     {
         // If lead with http or file extension, wrap the html tag to source.
         if (preg_match('/^http|\.css/', $source))
@@ -169,10 +238,64 @@ class BaseComponent {
                 $source = $this->getComponentPublicPath('assets/css/'.$source);
             }
 
-            $source = '<link href="'.asset($source).'" rel="stylesheet" media="'.$media.'">' . "\n";
+            $attributes['href'] = asset($source);
+            $attributes['rel'] = 'stylesheet';
+
+            $source = '<link'.$this->attributes($attributes).'>'.PHP_EOL;
         }
 
-        $this->app['view']->inject('component-styles', '@parent'.$source);
+        $this->register('style', $name, $source, $dependencies);
+    }
+
+    /**
+     * Build an HTML attribute string from an array.
+     *
+     * @param  array  $attributes
+     * @return string
+     */
+    protected function attributes($attributes)
+    {
+        $html = array();
+
+        // For numeric keys we will assume that the key and the value are the same
+        // as this will convert HTML attributes such as "required" to a correct
+        // form like required="required" instead of using incorrect numerics.
+        foreach ((array) $attributes as $key => $value)
+        {
+            $element = $this->attributeElement($key, $value);
+
+            if ( ! is_null($element)) $html[] = $element;
+        }
+
+        return count($html) > 0 ? ' '.implode(' ', $html) : '';
+    }
+
+    /**
+     * Build a single attribute element.
+     *
+     * @param  string  $key
+     * @param  string  $value
+     * @return string
+     */
+    protected function attributeElement($key, $value)
+    {
+        if (is_numeric($key)) $key = $value;
+
+        if ( ! is_null($value)) return $key.'="'.e($value).'"';
+    }
+
+    /**
+     * Register asset.
+     *
+     * @param  string $type
+     * @param  string $name
+     * @param  string $source
+     * @param  array  $dependencies
+     * @return void
+     */
+    protected function register($type, $name, $source, $dependencies)
+    {
+        $this->assets[$type][$name] = compact('source', 'dependencies');
     }
 
     /**
