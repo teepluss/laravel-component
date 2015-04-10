@@ -19,8 +19,20 @@ class ComponentServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
+		$this->loadViewsFrom(__DIR__.'/views', 'component');
+
 		// Auto create app alias with boot method.
         $loader = AliasLoader::getInstance()->alias('Component', 'Teepluss\Component\Facades\Component');
+
+        // Addition router.
+        $this->app['router']->get('/c/{component}', function($component)
+        {
+        	$args = $this->app['request']->all();
+
+        	$component = $this->app['component']->uses($component, $args)->render();
+
+        	return view('component::micro', compact('component'));
+        });
 	}
 
 	/**
