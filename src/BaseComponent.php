@@ -144,7 +144,7 @@ class BaseComponent {
      */
     public function script($name, $source, $dependencies = array(), $attributes = array())
     {
-        $this->add('script', $name, $source, $dependencies, $attributes, false);
+        $this->add('script', $name, $source, $dependencies, $attributes);
     }
 
     /**
@@ -159,7 +159,7 @@ class BaseComponent {
      */
     public function style($name, $source, $dependencies = array(), $attributes = array())
     {
-        $this->add('style', $name, $source, $dependencies, $attributes, false);
+        $this->add('style', $name, $source, $dependencies, $attributes);
     }
 
     /**
@@ -172,12 +172,21 @@ class BaseComponent {
      * @param array   $attributes
      * @param boolean $external
      */
-    protected function add($type, $name, $source, $dependencies = array(), $attributes = array(), $external = false)
+    protected function add($type, $name, $source, $dependencies = array(), $attributes = array())
     {
         $pattern = "~^//|http|\.js|\.css~i";
 
+        // Source as a path.
         if (preg_match($pattern, $source))
         {
+            // Source is not an external, so add internal path.
+            if ( ! preg_match('~^(http|//)~', $source))
+            {
+                $subpath = ($type == 'style') ? 'css' : 'js';
+
+                $source = $this->getComponentPublicPath('assets/'.$subpath.'/'.$source);
+            }
+
             switch ($type)
             {
                 case 'script' :

@@ -21,18 +21,28 @@ class ComponentServiceProvider extends ServiceProvider {
 	{
 		$this->loadViewsFrom(__DIR__.'/views', 'component');
 
+        $this->publishes([
+            __DIR__.'/views' => base_path('resources/views/vendor/component'),
+            __DIR__.'/../config/component.php' => config_path('component.php'),
+        ]);
+
 		// Auto create app alias with boot method.
         $loader = AliasLoader::getInstance()->alias('Component', 'Teepluss\Component\Facades\Component');
 
-        // Addition router.
-        $this->app['router']->get('/c/{component}', function($component)
+        if (config('component.widget.enable'))
         {
-        	$args = $this->app['request']->all();
+            $path = config('component.widget.path');
 
-        	$component = $this->app['component']->uses($component, $args)->render();
+            // Addition router.
+            $this->app['router']->get($path, function($name)
+            {
+            	$args = $this->app['request']->all();
 
-        	return view('component::micro', compact('component'));
-        });
+            	$component = $this->app['component']->uses($name, $args)->render();
+
+            	return view('component::widget', compact('name', 'component'));
+            });
+        }
 	}
 
 	/**
@@ -42,20 +52,14 @@ class ComponentServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->app->singleton('component', function($app)
-		{
-			return new Component($app);
-		});
+        $configPath = __DIR__.'/../config/component.php';
 
-		$this->app->singleton('component.asset', function($app)
-		{
-			return  new Asset();
-		});
+        // Merge config to allow user overwrite.
+        $this->mergeConfigFrom($configPath, 'component');
 
-		$this->app->singleton('component.make', function($app)
-		{
-			return new Commands\ComponentMake($app);
-		});
+        $this->registerComponent();
+        $this->registerComponentAsset();
+        $this->registerComponentMakeCommand();
 
 		// Assign commands.
         $this->commands(
@@ -64,6 +68,30 @@ class ComponentServiceProvider extends ServiceProvider {
 
         $this->app->alias('component', 'Teepluss\Component\Contracts\Component');
 	}
+
+    protected function registerComponent()
+    {
+        $this->app->singleton('component', function($app)
+        {
+            return new Component($app);
+        });
+    }
+
+    protected function registerComponentAsset()
+    {
+        $this->app->singleton('component.asset', function($app)
+        {
+            return  new Asset();
+        });
+    }
+
+    protected function registerComponentMakeCommand()
+    {
+        $this->app->singleton('component.make', function($app)
+        {
+            return new Commands\ComponentMake($app);
+        });
+    }
 
 	/**
 	 * Get the services provided by the provider.
