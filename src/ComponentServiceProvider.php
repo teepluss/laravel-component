@@ -29,6 +29,7 @@ class ComponentServiceProvider extends ServiceProvider {
 		// Auto create app alias with boot method.
         $loader = AliasLoader::getInstance()->alias('Component', 'Teepluss\Component\Facades\Component');
 
+        // Route for component
         if (config('component.widget.enable'))
         {
             $path = config('component.widget.path');
@@ -37,7 +38,6 @@ class ComponentServiceProvider extends ServiceProvider {
             $this->app['router']->get($path, function($name)
             {
             	$args = $this->app['request']->all();
-
             	$component = $this->app['component']->uses($name, $args)->render();
 
             	return view('component::widget', compact('name', 'component'));
