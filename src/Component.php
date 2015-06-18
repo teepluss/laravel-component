@@ -59,7 +59,7 @@ class Component implements ComponentContract {
                 $this->component->getComponentPath().'/lang'
             );
 
-            // Ad view hint.
+            // Add view hint.
             $this->app['view']->addNamespace(
                 $this->component->getComponentNamespace(),
                 $this->component->getComponentPath().'/views'
@@ -87,11 +87,21 @@ class Component implements ComponentContract {
         return new $component($this->app, $arguments);
     }
 
+    /**
+     * Render scripts
+     *
+     * @return string
+     */
     public function scripts()
     {
         return $this->app['component.asset']->scripts();
     }
 
+    /**
+     * Render styles
+     *
+     * @return string
+     */
     public function styles()
     {
         return $this->app['component.asset']->styles();
