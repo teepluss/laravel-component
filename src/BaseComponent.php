@@ -1,9 +1,10 @@
-<?php namespace Teepluss\Component;
+<?php 
+namespace Teepluss\Component;
 
 use Illuminate\Foundation\Application as Application;
 
-class BaseComponent {
-
+class BaseComponent 
+{
     /**
      * Application.
      *
@@ -177,18 +178,15 @@ class BaseComponent {
         $pattern = "~^//|http|\.js|\.css~i";
 
         // Source as a path.
-        if (preg_match($pattern, $source))
-        {
+        if (preg_match($pattern, $source)) {
             // Source is not an external, so add internal path.
-            if ( ! preg_match('~^(http|//)~', $source))
-            {
+            if (! preg_match('~^(http|//)~', $source)) {
                 $subpath = ($type == 'style') ? 'css' : 'js';
 
                 $source = $this->getComponentPublicPath('assets/'.$subpath.'/'.$source);
             }
 
-            switch ($type)
-            {
+            switch ($type) {
                 case 'script' :
                     $attributes['src'] = asset($source);
                     $source = '<script'.$this->attributes($attributes).'></script>';
@@ -219,11 +217,10 @@ class BaseComponent {
         // For numeric keys we will assume that the key and the value are the same
         // as this will convert HTML attributes such as "required" to a correct
         // form like required="required" instead of using incorrect numerics.
-        foreach ((array) $attributes as $key => $value)
-        {
+        foreach ((array) $attributes as $key => $value) {
             $element = $this->attributeElement($key, $value);
 
-            if ( ! is_null($element)) $html[] = $element;
+            if (! is_null($element)) $html[] = $element;
         }
 
         return count($html) > 0 ? ' '.implode(' ', $html) : '';
@@ -240,7 +237,7 @@ class BaseComponent {
     {
         if (is_numeric($key)) $key = $value;
 
-        if ( ! is_null($value)) return $key.'="'.e($value).'"';
+        if (! is_null($value)) return $key.'="'.e($value).'"';
     }
 
     /**

@@ -1,5 +1,7 @@
-<?php namespace Teepluss\Component\Contracts;
+<?php 
+namespace Teepluss\Component\Contracts;
 
-interface Component {
-
+interface Component 
+{
+    
 }

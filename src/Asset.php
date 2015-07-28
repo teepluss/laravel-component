@@ -1,7 +1,8 @@
-<?php namespace Teepluss\Component;
+<?php 
+namespace Teepluss\Component;
 
-class Asset {
-
+class Asset 
+{
     protected $assets = array();
 
     /**
@@ -36,12 +37,11 @@ class Asset {
      */
     protected function assetGroup($group)
     {
-        if ( ! isset($this->assets[$group]) or count($this->assets[$group]) == 0) return '';
+        if (! isset($this->assets[$group]) or count($this->assets[$group]) == 0) return '';
 
         $assets = '';
 
-        foreach ($this->arrange($this->assets[$group]) as $name => $data)
-        {
+        foreach ($this->arrange($this->assets[$group]) as $name => $data) {
             $assets .= $data['source'] . PHP_EOL;
         }
 
@@ -58,10 +58,8 @@ class Asset {
     {
         list($original, $sorted) = array($assets, array());
 
-        while (count($assets) > 0)
-        {
-            foreach ($assets as $asset => $value)
-            {
+        while (count($assets) > 0) {
+            foreach ($assets as $asset => $value) {
                 $this->evaluateAsset($asset, $value, $original, $sorted, $assets);
             }
         }
@@ -84,28 +82,20 @@ class Asset {
         // If the asset has no more dependencies, we can add it to the sorted list
         // and remove it from the array of assets. Otherwise, we will not verify
         // the asset's dependencies and determine if they've been sorted.
-        if (count($assets[$asset]['dependencies']) == 0)
-        {
+        if (count($assets[$asset]['dependencies']) == 0) {
             $sorted[$asset] = $value;
-
             unset($assets[$asset]);
-        }
-        else
-        {
-            foreach ($assets[$asset]['dependencies'] as $key => $dependency)
-            {
-                if ( ! $this->dependecyIsValid($asset, $dependency, $original, $assets))
-                {
+        } else {
+            foreach ($assets[$asset]['dependencies'] as $key => $dependency) {
+                if (! $this->dependecyIsValid($asset, $dependency, $original, $assets)) {
                     unset($assets[$asset]['dependencies'][$key]);
-
                     continue;
                 }
 
                 // If the dependency has not yet been added to the sorted list, we can not
                 // remove it from this asset's array of dependencies. We'll try again on
                 // the next trip through the loop.
-                if ( ! isset($sorted[$dependency])) continue;
-
+                if (! isset($sorted[$dependency])) continue;
                 unset($assets[$asset]['dependencies'][$key]);
             }
         }
@@ -127,16 +117,11 @@ class Asset {
      */
     protected function dependecyIsValid($asset, $dependency, $original, $assets)
     {
-        if ( ! isset($original[$dependency]))
-        {
+        if (! isset($original[$dependency])) {
             return false;
-        }
-        elseif ($dependency === $asset)
-        {
+        } elseif ($dependency === $asset) {
             throw new \Exception("Asset [$asset] is dependent on itself.");
-        }
-        elseif (isset($assets[$dependency]) and in_array($asset, $assets[$dependency]['dependencies']))
-        {
+        } elseif (isset($assets[$dependency]) and in_array($asset, $assets[$dependency]['dependencies'])) {
             throw new \Exception("Assets [$asset] and [$dependency] have a circular dependency.");
         }
 
@@ -169,9 +154,8 @@ class Asset {
      */
     protected function register($type, $name, $source, $dependencies)
     {
-        if ( ! in_array($type, ['style', 'script']))
-        {
-            $type = (pathinfo($source, PATHINFO_EXTENSION) == 'css') ? 'style' : 'script';
+        if (! in_array($type, ['style', 'script'])) {
+            $type = (pathinfo($source, PATHINFO_EXTENSION) == 'css') ? 'style' : 'script';        
         }
 
         $this->assets[$type][$name] = compact('source', 'dependencies');

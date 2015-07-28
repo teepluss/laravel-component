@@ -1,12 +1,13 @@
-<?php namespace Teepluss\Component;
+<?php 
+namespace Teepluss\Component;
 
 use Teepluss\Component\BaseComponentInterface;
 use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Foundation\Application as Application;
 use Teepluss\Component\Contracts\Component as ComponentContract;
 
-class Component implements ComponentContract {
-
+class Component implements ComponentContract 
+{
     use AppNamespaceDetectorTrait;
 
     /**
@@ -51,8 +52,7 @@ class Component implements ComponentContract {
     {
         $this->component = $this->getComponent($component, $arguments);
 
-        if ( ! array_key_exists($component, $this->coreLoaded))
-        {
+        if (! array_key_exists($component, $this->coreLoaded)) {
             // Add translation hint.
             $this->app['translator']->addNamespace(
                 $this->component->getComponentNamespace(),
@@ -154,11 +154,10 @@ class Component implements ComponentContract {
 
         $view = $this->component->prepare()->execute();
 
-        if ( ! isset($view['path'])) return '';
+        if (! isset($view['path'])) return '';
 
         // Using object cache to save performance.
-        return $this->app['cache']->driver('array')->remember($cacheKey, 9999, function() use ($view)
-        {
+        return $this->app['cache']->driver('array')->remember($cacheKey, 9999, function() use ($view) {
             $data = array_get($view, 'data');
 
             return view($this->component->getComponentNamespace().'::'.$view['path'], $data)->render();

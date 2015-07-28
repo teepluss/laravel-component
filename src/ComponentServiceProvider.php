@@ -1,10 +1,11 @@
-<?php namespace Teepluss\Component;
+<?php 
+namespace Teepluss\Component;
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
-class ComponentServiceProvider extends ServiceProvider {
-
+class ComponentServiceProvider extends ServiceProvider 
+{
 	/**
 	 * Indicates if loading of the provider is deferred.
 	 *
@@ -30,13 +31,11 @@ class ComponentServiceProvider extends ServiceProvider {
         $loader = AliasLoader::getInstance()->alias('Component', 'Teepluss\Component\Facades\Component');
 
         // Route for component
-        if (config('component.widget.enable'))
-        {
+        if (config('component.widget.enable')) {
             $path = config('component.widget.path');
 
             // Addition router.
-            $this->app['router']->get($path, function($name)
-            {
+            $this->app['router']->get($path, function($name) {
             	$args = $this->app['request']->all();
             	$component = $this->app['component']->uses($name, $args)->render();
 
@@ -69,26 +68,38 @@ class ComponentServiceProvider extends ServiceProvider {
         $this->app->alias('component', 'Teepluss\Component\Contracts\Component');
 	}
 
+    /**
+     * Register component core
+     * 
+     * @return \Teepluss\Component\Component
+     */
     protected function registerComponent()
     {
-        $this->app->singleton('component', function($app)
-        {
+        $this->app->singleton('component', function($app) {
             return new Component($app);
         });
     }
 
+    /**
+     * Register component asset
+     * 
+     * @return \Teepluss\Component\Asset
+     */
     protected function registerComponentAsset()
     {
-        $this->app->singleton('component.asset', function($app)
-        {
+        $this->app->singleton('component.asset', function($app) {
             return  new Asset();
         });
     }
 
+    /**
+     * Register component command
+     * 
+     * @return \Teepluss\Component\Commands\CoponentMake
+     */
     protected function registerComponentMakeCommand()
     {
-        $this->app->singleton('component.make', function($app)
-        {
+        $this->app->singleton('component.make', function($app) {
             return new Commands\ComponentMake($app);
         });
     }

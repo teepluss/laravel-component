@@ -1,4 +1,5 @@
-<?php namespace Teepluss\Component\Commands;
+<?php 
+namespace Teepluss\Component\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -6,8 +7,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Container\Container as Application;
 use Illuminate\Console\AppNamespaceDetectorTrait;
 
-class ComponentMake extends Command {
-
+class ComponentMake extends Command 
+{
     use AppNamespaceDetectorTrait;
 
     /**
@@ -68,8 +69,7 @@ class ComponentMake extends Command {
      */
     protected function createComponentStuff($path)
     {
-        if ( ! $this->app['files']->isDirectory($path))
-        {
+        if (! $this->app['files']->isDirectory($path)) {
             $this->app['files']->makeDirectory($path, 0777, true);
         }
 
@@ -86,10 +86,8 @@ class ComponentMake extends Command {
      */
     protected function createComponent($path)
     {
-        if ($this->app['files']->isDirectory($path))
-        {
-            if ( ! $this->confirm('Component is already exists, Do you want to replace? [y|n]'))
-            {
+        if ($this->app['files']->isDirectory($path)) {
+            if (! $this->confirm('Component is already exists, Do you want to replace? [y|n]')) {
                 return false;
             }
         }
@@ -125,10 +123,8 @@ class ComponentMake extends Command {
             'ComponentNamespace' => $ComponentNamespace,
         ];
 
-        $content = preg_replace_callback('/\{([a-z0-9]+)\}/i', function($matches) use ($replacements)
-        {
+        $content = preg_replace_callback('/\{([a-z0-9]+)\}/i', function($matches) use ($replacements) {
             return $replacements[$matches[1]];
-
         }, $tmp);
 
         $this->app['files']->put($componentClass, $content);
